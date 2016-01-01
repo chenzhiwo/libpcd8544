@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS += -Wall 
 #CFLAGS += -DDEBUG_MESG -g -O0
 
-.PHONY: clean run debug rebuild
+.PHONY: clean exec debug rebuild
 
 pcd8544:main.o pcd8544.o gfx.o
 	$(CC) $(CFLAGS) -lwiringPi $^ -o $@
@@ -11,7 +11,7 @@ clean:
 	@echo Cleaning workspace.....
 	-rm ./*.o ./pcd8544
 
-run:pcd8544
+exec:pcd8544
 	./pcd8544
 
 debug:pcd8544

@@ -20,30 +20,31 @@ int main(int argc, char *args[])
 	pcdInit(PIN_CLK, PIN_DIN, PIN_DC, PIN_CE, PIN_RST);
 	gfxInitStruct gfxInitStr = {pcdBufferFlush, pcdBufferClear, pcdBufferDrawPixel, pcdBufferDrawBitMap, pcdBufferDrawBitMapBin};
 	gfxInit(gfxInitStr);
+	srand((unsigned)time(NULL)); 
 	gfxClear();
-	while(1)
-	{
+	gfxFlush();
+	/*	while(1)
+		{
 		gfxDrawBitMapBin(RANDNUMX,RANDNUMY,16,16,logo16x16,COLOR_BLACK,COLOR_NONE);
 		gfxFlush();
-		delay(50);
-	}
+		delay(30);
+		}*/
 
-	/*	pcdSetAddressingMode(PCD_ADDRESSING_VERTICAL);
-		int i = 0;
-		char c = 0x00;
-		while(1)
-		{
+	pcdSetAddressingMode(PCD_ADDRESSING_VERTICAL);
+	int i = 0;
+	char c = 0x00;
+	while(1)
+	{
 		for(c = 0x00; c < 0xff; c++)
 		{
-		pcdSetXYAddress(0,0);
-		for(i = 0; i < PCD_BYTE; i++)
-		{
-		pcdWriteDataByte(c);
+			pcdSetXYAddress(0,0);
+			for(i = 0; i < PCD_BYTE; i++)
+			{
+				pcdWriteDataByte(c);
+				delayMicroseconds(400);
+			}
 		}
-		delay(150);
-		delayMicroseconds(900);
-		}
-		}*/
+	}
 
 	return 0;
 }
