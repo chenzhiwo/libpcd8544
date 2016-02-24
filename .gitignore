@@ -1,5 +1,5 @@
-pcd8544
 *.[oa]
 *.swp
+*.so
 tags
-test.sh
+demo

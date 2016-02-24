@@ -1,24 +1,38 @@
-CC = gcc
-CFLAGS += -Wall 
-#CFLAGS += -DDEBUG_MESG -g -O0
+LIB_NAME=libpcd8544.so
+DEMO_NAME=demo
+PERFIX=/usr
 
-.PHONY: clean exec debug rebuild
+CC=gcc
+CFLAGS=-O0 -Wall
+LDFLAGS=-lwiringPi -ltftgfx
 
-pcd8544:main.o pcd8544.o gfx.o
-	$(CC) $(CFLAGS) -lwiringPi $^ -o $@
+.PHONY:clean rebuild exec debug install
+
+all:$(LIB_NAME)
 
 clean:
-	@echo Cleaning workspace.....
-	-rm ./*.o ./pcd8544
+	@echo "Cleaning workspace.........."
+	-rm ./*.o ./$(LIB_NAME) ./$(DEMO_NAME)
 
-exec:pcd8544
-	./pcd8544
+rebuild:clean all
 
-debug:pcd8544
-	gdb ./pcd8544
+exec:all install $(DEMO_NAME)
+	./$(DEMO_NAME)
 
-rebuild:clean pcd8544
+debug:CFLAGS+=-g
+debug:rebuild
+	gdb ./$(DEMO_NAME)
 
-gfx.o: gfx.c gfx.h color.h
-main.o: main.c pcd8544.h color.h gfx.h bitmap.h
-pcd8544.o: pcd8544.c pcd8544.h color.h
+install:$(LIB_NAME)
+	install --mode=0644 libpcd8544.h  $(PERFIX)/include/
+	install --mode=0644 libpcd8544.so $(PERFIX)/lib/
+
+uninstall:
+	-rm  $(PERFIX)/include/libpcd8544.h
+	-rm  $(PERFIX)/lib/libpcd8544.so
+
+$(LIB_NAME):libpcd8544.o
+	$(CC) $^ -o $@ $(CFLAGS) $(LDFLAGS) -shared -fPIC
+
+$(DEMO_NAME):demo.o 
+	$(CC) $^ -o $@ -lpcd8544 -ltftgfx -lwiringPi
